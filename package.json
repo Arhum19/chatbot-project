@@ -1,0 +1,13 @@
+{
+  "name": "chatbot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A simple chatbot using Gemini API",
+  "main": "api/chat.js",
+  "scripts": {
+    "start": "vercel dev"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1"
+  }
+}
