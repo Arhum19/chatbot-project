@@ -6,14 +6,89 @@
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* CSS Variables for theming */
+:root {
+  --bg-gradient: linear-gradient(135deg, #0f172a, #123456, #1e3a8a, #3b82f6);
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --bg-primary: rgba(30, 41, 59, 0.55);
+  --bg-secondary: rgba(15, 23, 42, 0.8);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --shadow: rgba(0, 0, 0, 0.3);
+  --user-bg: #3b82f6;
+  --ai-bg: rgba(51, 65, 85, 0.8);
+  --input-bg: rgba(30, 41, 59, 0.8);
+  --button-bg: #3b82f6;
+  --button-hover: #2563eb;
+  --error-color: #ef4444;
+  --success-color: #10b981;
+}
+
+[data-theme="light"] {
+  --bg-gradient: linear-gradient(135deg, #f8fafc, #e2e8f0, #cbd5e1, #94a3b8);
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --bg-primary: rgba(255, 255, 255, 0.9);
+  --bg-secondary: rgba(248, 250, 252, 0.95);
+  --border-color: rgba(0, 0, 0, 0.1);
+  --shadow: rgba(0, 0, 0, 0.1);
+  --user-bg: #3b82f6;
+  --ai-bg: rgba(241, 245, 249, 0.9);
+  --input-bg: rgba(255, 255, 255, 0.9);
+  --button-bg: #3b82f6;
+  --button-hover: #2563eb;
+  --error-color: #dc2626;
+  --success-color: #059669;
+}
+
+[data-theme="light"] h1 {
+  background: none;
+  color: #1e293b;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+}
+
+[data-theme="light"] .control-btn {
+  background: rgba(0, 0, 0, 0.08);
+  color: #374151;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .control-btn:hover {
+  background: rgba(0, 0, 0, 0.12);
+  color: #1f2937;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .divider {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .dropdown-menu {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .dropdown-item {
+  color: #374151;
+}
+
+[data-theme="light"] .dropdown-item:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #1f2937;
+}
+
 body {
-  background: linear-gradient(135deg, #0f172a, #123456, #1e3a8a, #3b82f6);
+  background: var(--bg-gradient);
   background-size: 400% 400%;
   animation: gradientShift 15s ease infinite;
-  color: #f1f5f9;
+  color: var(--text-primary);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  transition: all 0.3s ease;
 }
 
 /* Background Animation */
@@ -41,14 +116,129 @@ body {
 
 /* Header */
 header {
-  text-align: center;
+  position: relative;
+  z-index: 10000;
   padding: 1.5rem;
-  background: rgba(30, 41, 59, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
   border-radius: 16px;
   margin-bottom: 1rem;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 20px var(--shadow);
   backdrop-filter: blur(10px);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.title-section {
+  text-align: center;
+  flex: 1;
+}
+
+.header-controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.control-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 10px;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.control-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.btn-icon,
+.theme-icon {
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+}
+
+.divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 0 0.5rem;
+}
+
+/* Dropdown Menu */
+.dropdown-container {
+  position: relative;
+  z-index: 1001; /* Ensure container is above other elements */
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--bg-secondary);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 0.5rem;
+  min-width: 200px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 9999; /* Much higher z-index to ensure it's always on top */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.dropdown-item:hover {
+  background: var(--border-color);
+}
+
+.dropdown-icon {
+  font-size: 1rem;
+  width: 20px;
+  text-align: center;
+}
+
+.dropdown-text {
+  font-weight: 500;
 }
 
 h1 {
@@ -61,16 +251,16 @@ h1 {
 }
 
 .subtitle {
-  color: #cbd5e1;
+  color: var(--text-secondary);
   font-size: 0.95rem;
 }
 
 /* Chat Container */
 .chat-container {
   flex-grow: 1;
-  background: rgba(17, 25, 40, 0.6);
+  background: var(--bg-secondary);
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -155,13 +345,12 @@ h1 {
   line-height: 1.5;
   font-size: 0.98rem;
   border: 1px solid rgba(255, 255, 255, 0.05);
-  
+
   /* FIXES */
   word-break: normal;
   overflow-wrap: anywhere; /* Keeps code and text wrapped */
   max-width: 100%;
 }
-
 
 .user-message .message-content {
   background: rgba(99, 102, 241, 0.2);
@@ -205,14 +394,12 @@ h1 {
   padding: 1rem;
   border-radius: 8px;
   margin: 0.5rem 0;
-  overflow-x: auto;  /* allows horizontal scroll */
+  overflow-x: auto; /* allows horizontal scroll */
   border-left: 4px solid #38bdf8;
 
   white-space: pre-wrap; /* wrap long lines */
   word-wrap: break-word; /* break long words */
 }
-
-
 
 .message-content pre code {
   background: none;
@@ -251,8 +438,8 @@ h1 {
 /* Input Area */
 .input-container {
   padding: 1rem;
-  background: rgba(17, 25, 40, 0.7);
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
   backdrop-filter: blur(8px);
 }
 
@@ -356,10 +543,392 @@ button:disabled {
   header {
     padding: 1rem;
   }
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+  }
   .chat-messages {
     padding: 1rem;
   }
   .message-content {
     font-size: 0.95rem;
   }
+  .message {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .message-wrapper {
+    align-self: stretch;
+  }
 }
+
+/* New Styles for Enhanced Features */
+
+/* Message Wrapper */
+.message-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex: 1;
+}
+
+/* Timestamp Styles */
+.message-timestamp {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  opacity: 0.7;
+  margin-left: 0.5rem;
+  font-style: italic;
+}
+
+/* Copy Message Button */
+.copy-message-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+  margin-left: 0.5rem;
+}
+
+.copy-message-btn:hover {
+  opacity: 1;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.copy-message-btn.copied {
+  color: var(--success-color);
+  opacity: 1;
+}
+
+/* Message Header */
+.message-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.2rem;
+}
+
+/* Streaming Text Effect */
+.streaming-text {
+  position: relative;
+}
+
+.streaming-text::after {
+  content: "|";
+  animation: blink 1s infinite;
+  color: var(--text-primary);
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Update existing message styles to work with variables */
+.message-content {
+  background: var(--ai-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.user-message .message-content {
+  background: var(--user-bg);
+  color: white;
+}
+
+/* Input styles update */
+textarea {
+  background: var(--input-bg) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+button[type="submit"] {
+  background: var(--button-bg) !important;
+}
+
+button[type="submit"]:hover {
+  background: var(--button-hover) !important;
+}
+
+/* Theme transition */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+/* Chat History Sidebar */
+.chat-history-sidebar {
+  position: fixed;
+  top: 0;
+  left: -350px;
+  width: 350px;
+  height: 100vh;
+  background: var(--bg-secondary);
+  backdrop-filter: blur(20px);
+  border-right: 1px solid var(--border-color);
+  z-index: 15000;
+  transition: left 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-history-sidebar.open {
+  left: 0;
+}
+
+.sidebar-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar-header h3 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+}
+
+.close-sidebar {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.close-sidebar:hover {
+  background: var(--border-color);
+  color: var(--text-primary);
+}
+
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.chat-sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.chat-session-item {
+  padding: 1rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.chat-session-item:hover {
+  background: var(--border-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.chat-session-item.active {
+  border-color: var(--button-bg);
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.chat-session-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.chat-session-preview {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.chat-session-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.chat-session-date {
+  opacity: 0.8;
+}
+
+.chat-session-delete {
+  background: none;
+  border: none;
+  color: var(--error-color);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.chat-session-item:hover .chat-session-delete {
+  opacity: 1;
+}
+
+.chat-session-delete:hover {
+  background: rgba(220, 38, 38, 0.1);
+}
+
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 14000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.sidebar-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* New Chat and Chat History buttons */
+.new-chat,
+.chat-history {
+  background: var(--button-bg);
+  border: none;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.new-chat:hover,
+.chat-history:hover {
+  background: var(--button-hover);
+  transform: translateY(-2px);
+}
+
+/* Empty state */
+.chat-sessions-empty {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+.chat-sessions-empty h4 {
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .chat-history-sidebar {
+    width: 90vw;
+    left: -90vw;
+  }
+
+  .header-controls {
+    gap: 0.4rem;
+  }
+
+  .control-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .btn-icon,
+  .theme-icon {
+    font-size: 1.1rem;
+  }
+
+  .dropdown-menu {
+    min-width: 180px;
+    right: -10px;
+  }
+
+  /* Make delete buttons always visible on mobile */
+  .chat-session-delete {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .control-btn {
+    width: 38px;
+    height: 38px;
+  }
+
+  .btn-icon,
+  .theme-icon {
+    font-size: 1rem;
+  }
+
+  .header-controls {
+    gap: 0.3rem;
+  }
+
+  .dropdown-menu {
+    min-width: 160px;
+    right: 0;
+    left: auto;
+    /* Ensure dropdown stays within viewport */
+    max-width: calc(100vw - 40px);
+  }
+
+  /* Adjust dropdown position if it would overflow */
+  .dropdown-container:last-child .dropdown-menu {
+    right: 0;
+    left: auto;
+  }
+}
+
+/* For very narrow screens, make dropdown full width */
+@media (max-width: 380px) {
+  .dropdown-menu {
+    right: 0;
+    left: 0;
+    min-width: unset;
+    width: calc(100vw - 32px);
+    margin: 0 16px;
+  }
+}
+
+/* End of styles */

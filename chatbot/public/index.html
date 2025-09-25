@@ -10,9 +10,72 @@
   <body>
     <div class="container">
       <header>
-        <h1>💬 Arhum's AI Chat</h1>
-        <p class="subtitle">Chat with Arhum's advanced AI model</p>
+        <div class="header-content">
+          <div class="title-section">
+            <h1>💬 Arhum's AI Chat</h1>
+            <p class="subtitle">Chat with Arhum's advanced AI model</p>
+          </div>
+          <div class="header-controls">
+            <button
+              id="newChat"
+              class="control-btn"
+              title="Start a new conversation"
+            >
+              <span class="btn-icon">➕</span>
+            </button>
+            <button
+              id="chatHistory"
+              class="control-btn"
+              title="View your chat history"
+            >
+              <span class="btn-icon">�</span>
+            </button>
+            <div class="divider"></div>
+            <button
+              id="themeToggle"
+              class="control-btn theme-btn"
+              title="Switch between dark and light theme"
+            >
+              <span class="theme-icon">🌙</span>
+            </button>
+            <div class="dropdown-container">
+              <button
+                id="menuToggle"
+                class="control-btn menu-btn"
+                title="More options"
+              >
+                <span class="btn-icon">⋯</span>
+              </button>
+              <div id="dropdownMenu" class="dropdown-menu">
+                <button
+                  id="clearHistory"
+                  class="dropdown-item"
+                  title="Clear all chat sessions"
+                >
+                  <span class="dropdown-icon">🗑️</span>
+                  <span class="dropdown-text">Clear All Chats</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </header>
+
+      <!-- Chat History Sidebar -->
+      <div id="chatHistorySidebar" class="chat-history-sidebar">
+        <div class="sidebar-header">
+          <h3>Chat History</h3>
+          <button id="closeSidebar" class="close-sidebar">✕</button>
+        </div>
+        <div class="sidebar-content">
+          <div id="chatSessionsList" class="chat-sessions-list">
+            <!-- Chat sessions will be populated here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Overlay for sidebar -->
+      <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
       <div class="chat-container">
         <div class="chat-messages" id="chatMessages">
@@ -37,7 +100,5 @@
         </div>
       </div>
     </div>
-
-    
   </body>
 </html>
