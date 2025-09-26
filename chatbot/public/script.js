@@ -454,31 +454,41 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Copy message content function
-  function copyMessageContent(button, text) {
+  function copyMessageContent(button, htmlContent) {
     // Create a temporary div to parse the HTML
     const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = text;
+    tempDiv.innerHTML = htmlContent;
     
-    // Handle code blocks specially to preserve formatting
-    const codeBlocks = tempDiv.querySelectorAll('pre code');
-    codeBlocks.forEach(codeBlock => {
-      // Get the raw code text and ensure line breaks are preserved
+    // Handle code blocks - look for the actual structure: div.code-block-container > pre > code
+    const codeContainers = tempDiv.querySelectorAll('.code-block-container');
+    codeContainers.forEach(container => {
+      const codeElement = container.querySelector('code');
+      if (codeElement) {
+        // Get the raw code text with preserved line breaks
+        const codeText = codeElement.textContent || codeElement.innerText || "";
+        // Replace the entire container with properly formatted code
+        container.outerHTML = '\n```\n' + codeText + '\n```\n';
+      }
+    });
+    
+    // Handle remaining pre > code blocks (if any exist without containers)
+    const preCodeBlocks = tempDiv.querySelectorAll('pre code');
+    preCodeBlocks.forEach(codeBlock => {
       const codeText = codeBlock.textContent || codeBlock.innerText || "";
-      // Replace the entire pre element with formatted text
-      const preElement = codeBlock.closest('pre') || codeBlock.parentElement;
+      const preElement = codeBlock.closest('pre');
       if (preElement) {
         preElement.outerHTML = '\n```\n' + codeText + '\n```\n';
       }
     });
     
     // Handle inline code
-    const inlineCodes = tempDiv.querySelectorAll('code:not(pre code)');
+    const inlineCodes = tempDiv.querySelectorAll('code');
     inlineCodes.forEach(code => {
       const codeText = code.textContent || code.innerText || "";
       code.outerHTML = '`' + codeText + '`';
     });
     
-    // Handle line breaks and paragraphs
+    // Handle other HTML elements
     tempDiv.innerHTML = tempDiv.innerHTML
       .replace(/<br\s*\/?>/gi, '\n')
       .replace(/<\/p>\s*<p>/gi, '\n\n')
@@ -487,7 +497,8 @@ document.addEventListener("DOMContentLoaded", () => {
       .replace(/<li>/gi, '• ')
       .replace(/<\/li>/gi, '\n')
       .replace(/<\/?ul>/gi, '')
-      .replace(/<\/?ol>/gi, '');
+      .replace(/<\/?ol>/gi, '')
+      .replace(/<strong>(.*?)<\/strong>/gi, '**$1**');
     
     // Get final plain text
     const plainText = tempDiv.textContent || tempDiv.innerText || "";
