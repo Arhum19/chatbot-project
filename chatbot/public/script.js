@@ -452,13 +452,51 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Copy message content function
   function copyMessageContent(button, text) {
-    // Strip HTML tags for copying plain text
+    // Create a temporary div to parse the HTML
     const tempDiv = document.createElement("div");
     tempDiv.innerHTML = text;
+    
+    // Handle code blocks specially to preserve formatting
+    const codeBlocks = tempDiv.querySelectorAll('pre code');
+    codeBlocks.forEach(codeBlock => {
+      // Get the raw code text and ensure line breaks are preserved
+      const codeText = codeBlock.textContent || codeBlock.innerText || "";
+      // Replace the entire pre element with formatted text
+      const preElement = codeBlock.closest('pre') || codeBlock.parentElement;
+      if (preElement) {
+        preElement.outerHTML = '\n```\n' + codeText + '\n```\n';
+      }
+    });
+    
+    // Handle inline code
+    const inlineCodes = tempDiv.querySelectorAll('code:not(pre code)');
+    inlineCodes.forEach(code => {
+      const codeText = code.textContent || code.innerText || "";
+      code.outerHTML = '`' + codeText + '`';
+    });
+    
+    // Handle line breaks and paragraphs
+    tempDiv.innerHTML = tempDiv.innerHTML
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/<\/p>\s*<p>/gi, '\n\n')
+      .replace(/<p>/gi, '')
+      .replace(/<\/p>/gi, '\n')
+      .replace(/<li>/gi, '• ')
+      .replace(/<\/li>/gi, '\n')
+      .replace(/<\/?ul>/gi, '')
+      .replace(/<\/?ol>/gi, '');
+    
+    // Get final plain text
     const plainText = tempDiv.textContent || tempDiv.innerText || "";
+    
+    // Clean up formatting
+    const cleanText = plainText
+      .replace(/\n\s*\n\s*\n/g, '\n\n') // Remove excessive line breaks
+      .replace(/^\s+|\s+$/g, '') // Trim whitespace
+      .replace(/\s+$/gm, ''); // Remove trailing spaces from lines
 
     navigator.clipboard
-      .writeText(plainText)
+      .writeText(cleanText)
       .then(() => {
         button.textContent = "✅";
         button.classList.add("copied");
