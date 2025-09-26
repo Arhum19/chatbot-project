@@ -15,23 +15,18 @@ export default async function handler(req, res) {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-    // Add system instruction for proper code formatting
+    // Enhance prompt for better responses
     const enhancedPrompt = `${prompt}
 
-CRITICAL FORMATTING REQUIREMENTS:
-- When writing Python code, use EXACTLY 4 spaces for each level of indentation
-- Functions, classes, if statements, loops, etc. must be properly indented
-- Never use tabs, only spaces for indentation
-- Each nested block should be indented 4 more spaces than its parent
-- Example of correct Python indentation:
-def example_function():
-    if condition:
-        for item in items:
-            print(item)
-            if nested_condition:
-                do_something()
-
-Please ensure all code follows proper indentation standards for the respective programming language.`;
+RESPONSE GUIDELINES:
+- Answer questions naturally and conversationally
+- Only provide code if the user specifically asks for programming help
+- When providing code, ensure proper formatting and indentation:
+  * Python: Use 4 spaces for indentation
+  * JavaScript: Use 2 spaces for indentation  
+  * Other languages: Follow their standard conventions
+- For general questions, provide helpful text answers without code
+- Be concise and relevant to the user's question`;
 
     const result = await model.generateContent(enhancedPrompt);
     const response = await result.response;
