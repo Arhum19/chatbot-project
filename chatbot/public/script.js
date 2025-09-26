@@ -423,9 +423,12 @@ document.addEventListener("DOMContentLoaded", () => {
     copyButton.className = "copy-message-btn";
     copyButton.textContent = "📋";
     copyButton.title = "Copy message";
-    copyButton.addEventListener("click", () =>
-      copyMessageContent(copyButton, text)
-    );
+    copyButton.addEventListener("click", () => {
+      // Get the formatted HTML content from the message content div
+      const messageContentDiv = messageDiv.querySelector(".message-content");
+      const formattedHTML = messageContentDiv.innerHTML;
+      copyMessageContent(copyButton, formattedHTML);
+    });
 
     // Assemble message header
     messageHeader.appendChild(timestampElement);
