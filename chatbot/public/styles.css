@@ -396,9 +396,9 @@ h1 {
   margin: 0.5rem 0;
   overflow-x: auto; /* allows horizontal scroll */
   border-left: 4px solid #38bdf8;
-
-  white-space: pre-wrap; /* wrap long lines */
-  word-wrap: break-word; /* break long words */
+  white-space: pre-wrap; /* preserve whitespace but allow wrapping if needed */
+  tab-size: 4; /* set tab size for better indentation display */
+  word-break: keep-all; /* don't break words */
 }
 
 .message-content pre code {
@@ -407,6 +407,9 @@ h1 {
   color: #e2e8f0;
   font-size: 0.85rem;
   line-height: 1.4;
+  white-space: pre-wrap; /* preserve exact whitespace but allow wrapping */
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace; /* better monospace font */
+  display: block; /* ensure proper block display */
 }
 
 /* copy code area */
@@ -446,6 +449,7 @@ h1 {
 .input-form {
   display: flex;
   gap: 1rem;
+  align-items: flex-end; /* Keep buttons at the bottom when textarea grows */
 }
 
 textarea {

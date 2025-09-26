@@ -386,7 +386,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Remove streaming cursor and finalize
     element.classList.remove("streaming-text");
-    element.innerHTML = formatText(displayedText);
+    
+    // Apply final formatting
+    const finalHTML = formatText(displayedText);
+    
+    element.innerHTML = finalHTML;
     addCopyFunctionality();
   }
 
@@ -418,28 +422,15 @@ document.addEventListener("DOMContentLoaded", () => {
     timestampElement.className = "message-timestamp";
     timestampElement.textContent = formatTimestamp(timestamp);
 
-    // Create copy button
-    const copyButton = document.createElement("button");
-    copyButton.className = "copy-message-btn";
-    copyButton.textContent = "📋";
-    copyButton.title = "Copy message";
-    copyButton.addEventListener("click", () => {
-      // Get the formatted HTML content from the message content div
-      const messageContentDiv = messageDiv.querySelector(".message-content");
-      const formattedHTML = messageContentDiv.innerHTML;
-      copyMessageContent(copyButton, formattedHTML);
-    });
-
-    // Assemble message header
-    messageHeader.appendChild(timestampElement);
-    messageHeader.appendChild(copyButton);
-
     // Set content
     if (isUser) {
       messageContent.textContent = text;
     } else {
       messageContent.innerHTML = formatText(text);
     }
+
+    // Assemble message header (only timestamp, no copy button)
+    messageHeader.appendChild(timestampElement);
 
     // Assemble message
     messageWrapper.appendChild(messageHeader);
@@ -544,7 +535,8 @@ document.addEventListener("DOMContentLoaded", () => {
         button.setAttribute("data-listener", "true");
         button.addEventListener("click", () => {
           const codeBlock = button.parentElement.querySelector("code");
-          const text = codeBlock.textContent;
+          // Use innerText to preserve line breaks and formatting
+          const text = codeBlock.innerText || codeBlock.textContent;
 
           navigator.clipboard
             .writeText(text)
@@ -601,6 +593,55 @@ document.addEventListener("DOMContentLoaded", () => {
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
 
+  // Fix Python indentation
+  function fixPythonIndentation(code) {
+    const lines = code.split('\n');
+    const fixedLines = [];
+    let indentLevel = 0;
+    
+    for (let i = 0; i < lines.length; i++) {
+      const originalLine = lines[i];
+      const trimmedLine = originalLine.trim();
+      
+      // Skip empty lines - preserve them as is
+      if (trimmedLine === '') {
+        fixedLines.push('');
+        continue;
+      }
+      
+      // Handle dedenting keywords first (before adding indentation)
+      if (trimmedLine.match(/^(else|elif|except|finally)(\s|:)/)) {
+        indentLevel = Math.max(0, indentLevel - 1);
+      }
+      
+      // Apply current indentation level
+      const indentedLine = '    '.repeat(indentLevel) + trimmedLine;
+      fixedLines.push(indentedLine);
+      
+      // Check if we need to increase indentation for the next line
+      if (trimmedLine.endsWith(':') && !trimmedLine.startsWith('#')) {
+        indentLevel++;
+      }
+      
+      // Check for statements that typically end a block
+      if (trimmedLine.match(/^(return|break|continue|pass|raise)(\s|$)/)) {
+        // Look ahead to see if we should dedent
+        if (i < lines.length - 1) {
+          const nextLine = lines[i + 1]?.trim();
+          // If next line exists and isn't a comment or dedenting keyword, dedent
+          if (nextLine && 
+              !nextLine.startsWith('#') && 
+              !nextLine.match(/^(else|elif|except|finally)(\s|:)/) &&
+              nextLine !== '') {
+            indentLevel = Math.max(0, indentLevel - 1);
+          }
+        }
+      }
+    }
+    
+    return fixedLines.join('\n');
+  }
+
   // Escape HTML for safe code display
   function escapeHTML(str) {
     return str
@@ -619,6 +660,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Handle code blocks (```code```)
     text = text.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
       const languageClass = lang ? "language-" + lang : "";
+      
       return (
         '<div class="code-block-container"><pre><code class="' +
         languageClass +
